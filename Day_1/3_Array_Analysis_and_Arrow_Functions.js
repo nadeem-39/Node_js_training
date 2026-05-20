@@ -55,4 +55,12 @@ const getFirstEvenCardPosition = (deck) => {
   console.log(evenPosition);
   return evenPosition;
 };
-getFirstEvenCardPosition([5, 2, 3, 1]);
+
+const sumOfAllCards = (cards) => {
+  let sum = cards.reduce((e, sum) => sum + e, 0);
+  console.log(sum);
+};
+
+sumOfAllCards([1, 2, 3, 4]);
+
+// getFirstEvenCardPosition([5, 2, 3, 1]);

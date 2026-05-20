@@ -1,9 +1,11 @@
 //1. Build an occasion sign
 
 function buildSign(occasion, name) {
-  let message = `Happy ${occasion} ${name}!`;
+  let message = "";
+  if (occasion === "Anniversary") {
+    message = `Happy marriage ${occasion} ${name}`;
+  } else message = `Happy ${occasion} ${name}`;
   console.log(message);
-  return message;
 }
 
 //2. Build a birthday sign
@@ -34,7 +36,17 @@ function costOf(sign, currency) {
   return message;
 }
 
-buildSign("Birthday", "Rob");
-buildBirthdaySign(45);
-graduationFor("Hannah", 2022);
-costOf("Happy Birthday Rob!", "dollars");
+//
+function priceLabel(price, currency) {
+  if (Number(price) === 0) {
+    console.log("Its free");
+  } else if (price <= 100) {
+    console.log(`Price is ${price} ${currency}, cheap`);
+  } else console.log(`Price is ${price} ${currency}, premium`);
+}
+
+// buildSign("Birthday", "Rob");
+// buildBirthdaySign(45);
+// graduationFor("Hannah", 2022);
+// costOf("Happy Birthday Rob!", "dollars");
+priceLabel("0", "inr");

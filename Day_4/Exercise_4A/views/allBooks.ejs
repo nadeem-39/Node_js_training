@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Management</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,td{
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        button{
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        /* Popup */
+
+        .popup{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content{
+            background: white;
+            padding: 20px;
+            width: 350px;
+            border-radius: 10px;
+        }
+
+        input{
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+        .close-btn{
+            float: right;
+            background: red;
+            color: white;
+            border: none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Book Management</h1>
+
+    <!-- Add Button -->
+
+    <button onclick="openAddPopup()">
+        Add Book
+    </button>
+
+    <!-- Table -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>id</th>
+                <th>name</th>
+                <th>author</th>
+                <th>price</th>
+                <th>pages</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <% books.forEach((book)=> { %>
+
+                <tr>
+
+                    <td><%= book.id %></td>
+
+                    <td><%= book.name %></td>
+
+                    <td><%= book.author %></td>
+
+                    <td><%= book.price %></td>
+
+                    <td><%= book.pages %></td>
+
+                    <td>
+
+                        <!-- View -->
+
+                        <button
+                            onclick='openViewPopup(
+                                "<%= book.id %>",
+                                "<%= book.name %>",
+                                "<%= book.author %>",
+                                "<%= book.price %>",
+                                "<%= book.pages %>"
+                            )'
+
+                        >
+                            View
+                        </button>
+
+
+                        <!-- Edit -->
+
+                        <button
+                            onclick='openEditPopup(
+                                "<%= book.id %>",
+                                "<%= book.name %>",
+                                "<%= book.author %>",
+                                "<%= book.price %>",
+                                "<%= book.pages %>"
+                            )'
+                        >
+                            Edit
+                        </button>
+
+
+                        <!-- Delete -->
+
+                        <form
+                            action="/api/books/<%= book.id %>?_method=DELETE"
+                            method="POST"
+                            style="display:inline;"
+                        >
+
+                            <button type="submit">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- Popup -->
+
+    <div class="popup" id="popup">
+
+        <div class="popup-content">
+
+            <button
+                class="close-btn"
+                onclick="closePopup()"
+            >
+                X
+            </button>
+
+            <h2 id="popupTitle">
+                Add Book
+            </h2>
+
+            <form
+                id="bookForm"
+                method="POST"
+            >
+
+                <input
+                    type="number"
+                    name="id"
+                    id="id"
+                    placeholder="Book Id"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Book Name"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="author"
+                    id="author"
+                    placeholder="author"
+                    required
+                >
+
+                <input
+                    type="number"
+                    name="price"
+                    id="price"
+                    placeholder="price"
+                    required
+                >
+
+                <input
+                    type="number"
+                    name="pages"
+                    id="pages"
+                    placeholder="pages"
+                    required
+                >
+
+                <br><br>
+
+                <button type="submit" id="submitBtn">
+                    Submit
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        const popup =
+            document.getElementById("popup");
+
+        const form =
+            document.getElementById("bookForm");
+
+
+
+        // Add book Popup
+
+        function openAddPopup(){
+
+            popup.style.display = "flex";
+
+            document.getElementById(
+                "popupTitle"
+            ).innerText = "Add Book";
+
+            form.action = "/api/books/";
+
+            document.getElementById(
+                "submitBtn"
+            ).style.display = "block";
+
+            enableInputs(true);
+
+            form.reset();
+        }
+
+
+
+        // Edit Popup
+
+        function openEditPopup(
+            id,
+            name,
+            author,
+            price,
+            pages
+        ){
+
+            popup.style.display = "flex";
+
+            document.getElementById(
+                "popupTitle"
+            ).innerText = "Edit Book";
+
+            form.action =
+                "/api/books" +
+                "?_method=PUT";
+
+            document.getElementById(
+                "submitBtn"
+            ).style.display = "block";
+
+            enableInputs(true);
+
+            setValues(
+                id,
+                name,
+                author,
+                price,
+                pages
+            );
+        }
+
+
+
+        // View Popup
+
+        function openViewPopup(
+            id,
+            name,
+            author,
+            price,
+            pages
+        ){
+
+            popup.style.display = "flex";
+
+            document.getElementById(
+                "popupTitle"
+            ).innerText = "View Book";
+
+            document.getElementById(
+                "submitBtn"
+            ).style.display = "none";
+
+            enableInputs(false);
+
+            setValues(
+                id,
+                name,
+                author,
+                price,
+                pages
+            );
+        }
+
+
+
+        // Set Values
+
+        function setValues(
+            id,
+            name,
+            author,
+            price,
+            pages
+        ){
+
+            document.getElementById(
+                "id"
+            ).value = id;
+
+            document.getElementById(
+                "name"
+            ).value = name;
+
+            document.getElementById(
+                "author"
+            ).value = author;
+
+            document.getElementById(
+                "price"
+            ).value = price;
+
+            document.getElementById(
+                "pages"
+            ).value = pages;
+        }
+
+
+
+        // Enable Disable Inputs
+
+        function enableInputs(flag){
+
+            document.getElementById(
+                "id"
+            ).disabled = !flag;
+
+            document.getElementById(
+                "name"
+            ).disabled = !flag;
+
+            document.getElementById(
+                "author"
+            ).disabled = !flag;
+
+            document.getElementById(
+                "price"
+            ).disabled = !flag;
+
+            document.getElementById(
+                "pages"
+            ).disabled = !flag;
+        }
+
+
+
+        // Close Popup
+
+        function closePopup(){
+
+            popup.style.display = "none";
+        }
+
+    </script>
+
+</body>
+</html>
