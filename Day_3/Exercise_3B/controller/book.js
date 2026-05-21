@@ -1,10 +1,14 @@
 const books = require("../model/bookData");
 
 const getAllBooks = (req, res) => {
-  res.status(200).render("allBooks", { books });
+  try {
+    res.status(200).render("allBooks", { books });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getBookById = (req, res) => {
+const getBookById = (req, res, next) => {
   try {
     let { id } = req.params;
     let book = books.find((e) => e.BookId === Number(id));
@@ -15,7 +19,7 @@ const getBookById = (req, res) => {
   }
 };
 
-const addBook = (req, res) => {
+const addBook = (req, res, next) => {
   try {
     let { BookId, BookName, Author, Price, Pages } = req.body;
 
@@ -36,7 +40,7 @@ const addBook = (req, res) => {
   }
 };
 
-const updateBook = (req, res) => {
+const updateBook = (req, res, next) => {
   try {
     let { id } = req.params;
     let { BookName, Author, Price, Pages } = req.body;
@@ -58,7 +62,7 @@ const updateBook = (req, res) => {
   }
 };
 
-const deleteBook = (req, res) => {
+const deleteBook = (req, res, next) => {
   try {
     let { id } = req.params;
 

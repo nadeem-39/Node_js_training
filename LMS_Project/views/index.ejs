@@ -40,7 +40,7 @@
 				<div class="col-md-6">
 					<div class="card-body">
 						<h2 class="mb-4">Library Management System<span class="text-c-blue" style="color: #feca05;"> Login</span></h2>
-						<p class="mb-8">Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industrys.</p>
+						
 						<div class="toggle-block">
 							<!--ol class="position-relative carousel-indicators justify-content-start">
 								<li class=""></li>
@@ -50,13 +50,13 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text"><i class="feather icon-mail"></i></span>
 								</div>
-								<input type="email" class="form-control" placeholder="User Name">
+								<input type="email" id="email" class="form-control" placeholder="User Name" >
 							</div>
 							<div class="input-group mb-4">
 								<div class="input-group-prepend">
 									<span class="input-group-text"><i class="feather icon-lock"></i></span>
 								</div>
-								<input type="password" class="form-control" placeholder="Password">
+								<input type="password" id="password" class="form-control" placeholder="Password">
 							</div>
 							<div class="saprator"><span>OR</span></div>
 							<button class="btn btn-facebook mb-2 mr-2"><i class="fab fa-facebook-f"></i>facebook</button>
@@ -69,7 +69,7 @@
 									<label for="checkbox-fill-a1" class="cr"> Save credentials</label>
 								</div>
 							</div>
-							<a href="book-list.html" class="btn btn-warning mb-4">LOGIN</a>
+							<button onclick="loginFunction()" class="btn btn-warning mb-4">LOGIN</button>
 							
 						</div>
 						<div class="toggle-block collapse">
@@ -123,6 +123,38 @@
 	$('.toggle-btn').on('click', function() {
 		$('.toggle-block').toggle();
 	})
+
+	async function loginFunction(){
+		let email = document.getElementById('email');
+		let password = document.getElementById('password');
+
+		if(!email)alert('Enter Email');
+		if(!password)alert('Enter Password');
+
+		const userInfo = {
+			email:email.value,
+			password:password.value
+		}
+		
+		 const response = await fetch(
+                    `/api/login/`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                            "application/json",
+                        },
+
+                        body: JSON.stringify(
+                           userInfo
+                        ),
+                    }
+                );
+
+		if(response.error)alert(error);
+
+	}
 </script>
 
 </body>

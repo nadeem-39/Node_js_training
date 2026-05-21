@@ -1,7 +1,7 @@
 const books = require("../model/bookData");
 const Books = require("./db_query");
 
-const getAllBooks = async (req, res) => {
+const getAllBooks = async (req, res, next) => {
   try {
     const data = await Books.findAll();
     res.status(200).render("allBooks", { books: data });
@@ -10,7 +10,7 @@ const getAllBooks = async (req, res) => {
   }
 };
 
-const getBookById = async (req, res) => {
+const getBookById = async (req, res, next) => {
   try {
     let { id } = req.params;
     let book = await Books.findById(id);
@@ -21,7 +21,7 @@ const getBookById = async (req, res) => {
   }
 };
 
-const addBook = async (req, res) => {
+const addBook = async (req, res, next) => {
   try {
     let { id, name, author, price, pages } = req.body;
 
@@ -37,7 +37,7 @@ const addBook = async (req, res) => {
   }
 };
 
-const updateBook = async (req, res) => {
+const updateBook = async (req, res, next) => {
   try {
     let { id } = req.params;
     let { name, author, price, pages } = req.body;
@@ -53,7 +53,7 @@ const updateBook = async (req, res) => {
   }
 };
 
-const deleteBook = async (req, res) => {
+const deleteBook = async (req, res, next) => {
   try {
     let { id } = req.params;
 
