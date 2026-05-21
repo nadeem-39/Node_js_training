@@ -31,7 +31,7 @@ const addBook = async (req, res) => {
 
     let data = Books.createBook(id, name, author, price, pages);
 
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Book added successfully" });
   } catch (error) {
     next(error);
   }
@@ -47,7 +47,7 @@ const updateBook = async (req, res) => {
 
     await Books.findAndUpdate(id, name, author, price, pages);
 
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Book Edited successfully" });
   } catch (error) {
     next(error);
   }
@@ -63,7 +63,7 @@ const deleteBook = async (req, res) => {
 
     await Books.findAndDelete(id);
 
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Book deleted successfully" });
   } catch (error) {
     next(error);
   }

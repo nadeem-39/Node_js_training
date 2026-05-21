@@ -27,8 +27,6 @@
             cursor: pointer;
         }
 
-        /* Popup */
-
         .popup{
             display: none;
             position: fixed;
@@ -69,13 +67,9 @@
 
     <h1>Book Management</h1>
 
-    <!-- Add Button -->
-
     <button onclick="openAddPopup()">
         Add Book
     </button>
-
-    <!-- Table -->
 
     <table>
 
@@ -94,11 +88,11 @@
 
         </thead>
 
-        <tbody>
+        <tbody id="bookTableBody">
 
             <% books.forEach((book)=> { %>
 
-                <tr>
+                <tr id="row-<%= book.BookId %>">
 
                     <td><%= book.BookId %></td>
 
@@ -112,8 +106,6 @@
 
                     <td>
 
-                        <!-- View -->
-
                         <button
                             onclick='openViewPopup(
                                 "<%= book.BookId %>",
@@ -122,13 +114,9 @@
                                 "<%= book.Price %>",
                                 "<%= book.Pages %>"
                             )'
-
                         >
                             View
                         </button>
-
-
-                        <!-- Edit -->
 
                         <button
                             onclick='openEditPopup(
@@ -142,20 +130,13 @@
                             Edit
                         </button>
 
-
-                        <!-- Delete -->
-
-                        <form
-                            action="/api/books/<%= book.BookId %>?_method=DELETE"
-                            method="POST"
-                            style="display:inline;"
+                        <button
+                            onclick='deleteBook(
+                                "<%= book.BookId %>"
+                            )'
                         >
-
-                            <button type="submit">
-                                Delete
-                            </button>
-
-                        </form>
+                            Delete
+                        </button>
 
                     </td>
 
@@ -186,14 +167,10 @@
                 Add Book
             </h2>
 
-            <form
-                id="bookForm"
-                method="POST"
-            >
+            <form id="bookForm">
 
                 <input
                     type="number"
-                    name="BookId"
                     id="BookId"
                     placeholder="Book Id"
                     required
@@ -201,7 +178,6 @@
 
                 <input
                     type="text"
-                    name="BookName"
                     id="BookName"
                     placeholder="Book Name"
                     required
@@ -209,7 +185,6 @@
 
                 <input
                     type="text"
-                    name="Author"
                     id="Author"
                     placeholder="Author"
                     required
@@ -217,7 +192,6 @@
 
                 <input
                     type="number"
-                    name="Price"
                     id="Price"
                     placeholder="Price"
                     required
@@ -225,7 +199,6 @@
 
                 <input
                     type="number"
-                    name="Pages"
                     id="Pages"
                     placeholder="Pages"
                     required
@@ -253,9 +226,18 @@
         const form =
             document.getElementById("bookForm");
 
+        const tableBody =
+            document.getElementById(
+                "bookTableBody"
+            );
+
+        let editMode = false;
+
+        let currentBookId = null;
 
 
-        // Add book Popup
+
+        // Add Popup
 
         function openAddPopup(){
 
@@ -265,15 +247,15 @@
                 "popupTitle"
             ).innerText = "Add Book";
 
-            form.action = "/api/books/";
+            form.reset();
+
+            enableInputs(true);
 
             document.getElementById(
                 "submitBtn"
             ).style.display = "block";
 
-            enableInputs(true);
-
-            form.reset();
+            editMode = false;
         }
 
 
@@ -294,16 +276,6 @@
                 "popupTitle"
             ).innerText = "Edit Book";
 
-            form.action =
-                `/api/books/${BookId}` +
-                "?_method=PUT";
-
-            document.getElementById(
-                "submitBtn"
-            ).style.display = "block";
-
-            enableInputs(true);
-
             setValues(
                 BookId,
                 BookName,
@@ -311,6 +283,16 @@
                 Price,
                 Pages
             );
+
+            enableInputs(true);
+
+            document.getElementById(
+                "submitBtn"
+            ).style.display = "block";
+
+            editMode = true;
+
+            currentBookId = BookId;
         }
 
 
@@ -331,12 +313,6 @@
                 "popupTitle"
             ).innerText = "View Book";
 
-            document.getElementById(
-                "submitBtn"
-            ).style.display = "none";
-
-            enableInputs(false);
-
             setValues(
                 BookId,
                 BookName,
@@ -344,6 +320,12 @@
                 Price,
                 Pages
             );
+
+            enableInputs(false);
+
+            document.getElementById(
+                "submitBtn"
+            ).style.display = "none";
         }
 
 
@@ -413,6 +395,241 @@
         function closePopup(){
 
             popup.style.display = "none";
+        }
+
+
+
+        // Add/Edit Book
+
+        form.addEventListener(
+            "submit",
+            async (e) => {
+
+            e.preventDefault();
+
+            const bookData = {
+
+                BookId:
+                    document.getElementById(
+                        "BookId"
+                    ).value,
+
+                BookName:
+                    document.getElementById(
+                        "BookName"
+                    ).value,
+
+                Author:
+                    document.getElementById(
+                        "Author"
+                    ).value,
+
+                Price:
+                    document.getElementById(
+                        "Price"
+                    ).value,
+
+                Pages:
+                    document.getElementById(
+                        "Pages"
+                    ).value,
+            };
+
+            console.log(bookData);
+            
+
+
+
+            // EDIT
+
+            if(editMode){
+
+                const response = await fetch(
+                    `/api/books/${currentBookId}`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                            "application/json",
+                        },
+
+                        body: JSON.stringify(
+                            bookData
+                        ),
+                    }
+                );
+
+                const result =
+                    await response.json();
+
+                if(result.Success)alert(result.Success)
+                else{
+                    alert(result.Error)
+                    return;
+                }
+                
+                const row =
+                    document.getElementById(
+                        `row-${currentBookId}`
+                    );
+
+                row.innerHTML = `
+                    <td>${bookData.BookId}</td>
+                    <td>${bookData.BookName}</td>
+                    <td>${bookData.Author}</td>
+                    <td>${bookData.Price}</td>
+                    <td>${bookData.Pages}</td>
+
+                    <td>
+
+                        <button
+                            onclick='openViewPopup(
+                                "${bookData.BookId}",
+                                "${bookData.BookName}",
+                                "${bookData.Author}",
+                                "${bookData.Price}",
+                                "${bookData.Pages}"
+                            )'
+                        >
+                            View
+                        </button>
+
+                        <button
+                            onclick='openEditPopup(
+                                "${bookData.BookId}",
+                                "${bookData.BookName}",
+                                "${bookData.Author}",
+                                "${bookData.Price}",
+                                "${bookData.Pages}"
+                            )'
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            onclick='deleteBook(
+                                "${bookData.BookId}"
+                            )'
+                        >
+                            Delete
+                        </button>
+
+                    </td>
+                `;
+
+                  
+
+            }
+
+            // ADD
+
+            else{
+
+                const response = await fetch(
+                    "/api/books",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                            "application/json",
+                        },
+
+                        body: JSON.stringify(
+                            bookData
+                        ),
+                    }
+                );
+
+                const result =
+                    await response.json();
+
+                console.log(result);
+                if(result.Success)alert(result.Success)
+                else{
+                    alert(result.Error)
+                    return;
+                }
+
+                tableBody.innerHTML += `
+                    <tr id="row-${bookData.BookId}">
+
+                        <td>${bookData.BookId}</td>
+                        <td>${bookData.BookName}</td>
+                        <td>${bookData.Author}</td>
+                        <td>${bookData.Price}</td>
+                        <td>${bookData.Pages}</td>
+
+                        <td>
+
+                            <button
+                                onclick='openViewPopup(
+                                    "${bookData.BookId}",
+                                    "${bookData.BookName}",
+                                    "${bookData.Author}",
+                                    "${bookData.Price}",
+                                    "${bookData.Pages}"
+                                )'
+                            >
+                                View
+                            </button>
+
+                            <button
+                                onclick='openEditPopup(
+                                    "${bookData.BookId}",
+                                    "${bookData.BookName}",
+                                    "${bookData.Author}",
+                                    "${bookData.Price}",
+                                    "${bookData.Pages}"
+                                )'
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                onclick='deleteBook(
+                                    "${bookData.BookId}"
+                                )'
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+            }
+
+            closePopup();
+        });
+
+
+
+        // Delete Book
+
+        async function deleteBook(BookId){
+
+            const response = await fetch(
+                `/api/books/${BookId}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            const result =
+                await response.json();
+
+            console.log(result);
+            if(result.Success)alert(result.Success)
+            else{
+                alert(result.Error)
+                return;
+            }
+
+            document.getElementById(
+                `row-${BookId}`
+            ).remove();
         }
 
     </script>

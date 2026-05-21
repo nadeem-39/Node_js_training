@@ -30,7 +30,7 @@ const addBook = (req, res) => {
       Pages: Number(Pages),
     });
 
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Successfully Added book" });
   } catch (error) {
     next(error);
   }
@@ -52,7 +52,7 @@ const updateBook = (req, res) => {
       Pages: Number(Pages),
     });
 
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Successfully Edited book" });
   } catch (error) {
     next(error);
   }
@@ -70,7 +70,7 @@ const deleteBook = (req, res) => {
     books.splice(bookIdx, 1);
 
     // res.send({data:books});
-    res.redirect("/api/books");
+    res.status(200).send({ Success: "Successfully deleted book" });
   } catch (error) {
     next(error);
   }
