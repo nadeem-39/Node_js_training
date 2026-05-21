@@ -4,7 +4,7 @@ fs.readFile("read_1.txt", "utf-8", function (error, data) {
   console.log("Reading from read_1.txt\n" + data);
 });
 
-fs.writeFile("write_1.txt", "Hii there How are you?", "utf-8", (error) => {
+fs.writeFile("write_1.txt", "Hii there How are you?", (error) => {
   if (error) console.log(error);
 });
 

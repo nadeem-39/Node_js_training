@@ -295,7 +295,7 @@
             ).innerText = "Edit Book";
 
             form.action =
-                "/api/books" +
+                `/api/books/${BookId}` +
                 "?_method=PUT";
 
             document.getElementById(

@@ -7,7 +7,7 @@ const readiableStream = fs.createReadStream(__dirname + "/read_1.txt", "utf-8");
 const writableStream = fs.createWriteStream(__dirname + "/write_1.txt");
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, "OK", { "content-type": "text/plane" });
+  res.writeHead(200, "OK", { "content-type": "text/plain" });
   readiableStream.pipe(res);
 });
 

@@ -74,11 +74,8 @@ const books = [
 ];
 
 const server = http.createServer((req, res) => {
-  console.log(req.url);
-  res.writeHead(200, { "content-type": "text/plain" });
-  res.write("List of books");
-  res.write(JSON.stringify(books));
-  res.end("List of books");
+  res.writeHead(200, { "content-type": "application/json" });
+  res.end(JSON.stringify(books));
 });
 
 server.listen(3000, "127.0.0.1", () => {

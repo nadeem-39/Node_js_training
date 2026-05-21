@@ -55,8 +55,6 @@ class Books {
         id,
       ]);
 
-      console.log(data);
-
       return data;
     } catch (e) {
       console.log(e);
@@ -68,9 +66,6 @@ class Books {
 
     try {
       const [data] = await pool.execute(sql);
-
-      console.log(data);
-
       return data;
     } catch (e) {
       console.log(e);

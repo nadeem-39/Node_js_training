@@ -11,6 +11,11 @@ app.use(methodOverride("_method"));
 
 app.use("/api/books", BookRoutes);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send({ Error: "Server error" });
+});
+
 app.listen(3006, () => {
   console.log("listing at 3006");
 });
