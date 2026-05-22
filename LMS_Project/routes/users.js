@@ -1,7 +1,11 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const { login, loginPage } = require("../controller/user");
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {});
+// login form
+router.get("/", loginPage);
+
+// login logic
+router.post("/", login);
 
 module.exports = router;
