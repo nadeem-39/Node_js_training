@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LMS</title>
+
+    <%-include("includes/head.ejs")%>
+  </head>
+
+  <body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+      <div class="loader-track">
+        <div class="loader-fill"></div>
+      </div>
+    </div>
+    <!-- [ Pre-loader ] End -->
+    <!-- [ navigation menu ] start -->
+    <%-include("includes/admin-sidebar")%>
+    <!-- [ navigation menu ] end -->
+
+    <!-- [ Header ] start -->
+    <%-include('includes/header')%>
+    <!-- [ Header ] end -->
+
+    <!-- [ Main Content ] start -->
+    <section class="pcoded-main-container">
+      <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+          <div class="pcoded-inner-content">
+            <div class="main-body">
+              <div class="page-wrapper">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                  <div class="page-block">
+                    <div class="row align-items-center">
+                      <div class="col-md-12">
+                        <div class="page-header-title">
+                          <h5 class="m-b-10">Add Book</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                          <li class="breadcrumb-item">
+                            <a href="book-list.html"
+                              ><i class="feather icon-home"></i
+                            ></a>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <a href="book-list.html">Book List</a>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <a href="#!">Add Book</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- [ breadcrumb ] end -->
+                <!-- [ Main Content ] start -->
+                <div class="row">
+                  <!-- [ task-list ] start -->
+                  <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5>Add Book</h5>
+                      </div>
+                      <div class="card-body task-data">
+                        <form id="bookForm">
+                          <div class="form-group row">
+                            <label
+                              for="bookName"
+                              class="col-sm-3 col-form-label"
+                              >Book Name</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="bookName"
+                                placeholder="Book Name"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="authorName"
+                              class="col-sm-3 col-form-label"
+                              >Author Name</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="authorName"
+                                placeholder="Author Name"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="inputISBN"
+                              class="col-sm-3 col-form-label"
+                              >ISBN</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="number"
+                                class="form-control"
+                                id="inputISBN"
+                                placeholder="ISBN"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="bookFile"
+                              class="col-sm-3 col-form-label"
+                            >
+                              Upload File
+                            </label>
+
+                            <div class="col-sm-6">
+                              <input
+                                type="file"
+                                class="form-control"
+                                id="bookFile"
+                                name="file"
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-9 text-right">
+                              <button type="submit" class="btn btn-primary">
+                                Save
+                              </button>
+                              <a href="/book" class="btn btn-danger">
+                                Cancel
+                              </a>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- [ task-list ] end -->
+                </div>
+                <!-- [ Main Content ] end -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- [ Main Content ] end -->
+
+    <!-- Required Js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/vendor-all.min.js"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/pcoded.min.js"></script>
+
+    <script>
+      $("#bookForm").submit(async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append("bookName", $("#bookName").val());
+
+        formData.append("authorName", $("#authorName").val());
+
+        formData.append("isbn", $("#inputISBN").val());
+
+        formData.append("file", $("#bookFile")[0].files[0]);
+
+        try {
+          const response = await fetch("/book/new-book", {
+            method: "POST",
+
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert(data.message);
+
+            window.location.href = "/book";
+          } else {
+            alert(data.message || "Something went wrong");
+          }
+        } catch (error) {
+          console.log(error);
+
+          alert("Server Error");
+        }
+      });
+    </script>
+  </body>
+</html>

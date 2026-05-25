@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LMS</title>
+
+    <%-include("includes/head.ejs")%>
+  </head>
+
+  <body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+      <div class="loader-track">
+        <div class="loader-fill"></div>
+      </div>
+    </div>
+    <!-- [ Pre-loader ] End -->
+    <!-- [ navigation menu ] start -->
+    <%-include("includes/admin-sidebar")%>
+    <!-- [ navigation menu ] end -->
+
+    <!-- [ Header ] start -->
+    <%-include('includes/header')%>
+    <!-- [ Header ] end -->
+
+    <!-- [ Main Content ] start -->
+    <section class="pcoded-main-container">
+      <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+          <div class="pcoded-inner-content">
+            <div class="main-body">
+              <div class="page-wrapper">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                  <div class="page-block">
+                    <div class="row align-items-center">
+                      <div class="col-md-12">
+                        <div class="page-header-title">
+                          <h5 class="m-b-10">Add student</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                          <li class="breadcrumb-item">
+                            <a href="student-list.html"
+                              ><i class="feather icon-home"></i
+                            ></a>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <a href="student-list.html">Student List</a>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <a href="#!">Add Student</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- [ breadcrumb ] end -->
+                <!-- [ Main Content ] start -->
+                <div class="row">
+                  <!-- [ task-list ] start -->
+                  <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5>Add student</h5>
+                      </div>
+                      <div class="card-body task-data">
+                        <form id="studentForm">
+                          <div class="form-group row">
+                            <label
+                              for="library_id"
+                              class="col-sm-3 col-form-label"
+                              >Library ID</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="library_id"
+                                placeholder="student Name"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="student_name"
+                              class="col-sm-3 col-form-label"
+                              >Student Name</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="student_name"
+                                placeholder="student Name"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="author_name"
+                              class="col-sm-3 col-form-label"
+                              >Email Id</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="email"
+                                class="form-control"
+                                id="email_id"
+                                placeholder="Eamil id"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label
+                              for="student_age"
+                              class="col-sm-3 col-form-label"
+                              >Student Age</label
+                            >
+                            <div class="col-sm-6">
+                              <input
+                                type="number"
+                                class="form-control"
+                                id="student_age"
+                                placeholder="Student Age"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-9 text-right">
+                              <button type="submit" class="btn btn-primary">
+                                Save
+                              </button>
+                              <a href="/student" class="btn btn-danger">
+                                Cancel
+                              </a>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- [ task-list ] end -->
+                </div>
+                <!-- [ Main Content ] end -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- [ Main Content ] end -->
+
+    <!-- Required Js -->
+    <script src="/js/vendor-all.min.js"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/pcoded.min.js"></script>
+    <script>
+      const form = document.getElementById("studentForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const student_name = document.getElementById("student_name").value;
+
+        const student_age = document.getElementById("student_age").value;
+
+        const library_id = document.getElementById("library_id").value;
+
+        const email_id = document.getElementById("email_id").value;
+
+        try {
+          const response = await fetch("/student/new-student", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              student_name,
+              student_age,
+              library_id,
+              email_id,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert(data.message);
+
+            window.location.href = "/student";
+          } else {
+            alert(data.message || "Something went wrong");
+          }
+        } catch (error) {
+          console.log(error);
+
+          alert("Server Error");
+        }
+      });
+    </script>
+  </body>
+</html>

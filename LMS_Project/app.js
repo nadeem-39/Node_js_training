@@ -2,16 +2,19 @@ require("dotenv").config();
 
 const createError = require("http-errors");
 const express = require("express");
+const app = express();
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const logger = require("morgan");
+
+// routes
 const usersRouter = require("./routes/users");
 const booksRouter = require("./routes/books");
-
-const app = express();
+const studentRoutes = require("./routes/student");
+const issueRoutes = require("./routes/issue");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -76,6 +79,12 @@ app.get("/logout", (req, res, next) => {
 // books routes
 app.use("/book", booksRouter);
 
+//student routes
+app.use("/student", studentRoutes);
+
+// issue routes
+app.use("/issue", issueRoutes);
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
@@ -83,6 +92,8 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
+  console.log(err);
+
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
