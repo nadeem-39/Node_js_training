@@ -30,35 +30,28 @@ const addNewBook = async (req, res, next) => {
 
     const info = await transporter.sendMail({
       from: process.env.SMTP_USER,
-
       to: "nadeemsiddiqui0390@gmail.com",
-
-      subject: "New Book Added",
-
+      subject: "no-reply \nNew Book Added",
       html: `
                 <h2>Book Details</h2>
-
                 <p>
                     <strong>Book Name:</strong>
-                    ${book_name}
+                    ${bookName}
                 </p>
-
                 <p>
                     <strong>Author Name:</strong>
-                    ${author_name}
+                    ${authorName}
                 </p>
-
                 <p>
                     <strong>ISBN:</strong>
                     ${isbn}
                 </p>
             `,
-
       attachments: [
         {
-          filename: file,
-
-          path: path.join(__dirname, "../uploads", file),
+          filename: "Book Image",
+          path: `assets/uploads/${file}`,
+          contentType: req.file.mimetype,
         },
       ],
     });
