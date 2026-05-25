@@ -7,7 +7,8 @@ const issueBookBodyChecker = (req, res, next) => {
       success: false,
       message: "Library Id not found",
     });
-  } else if (!book_id) {
+  }
+  if (!book_id) {
     return res.status(400).json({
       success: false,
       message: "Book Id not found",

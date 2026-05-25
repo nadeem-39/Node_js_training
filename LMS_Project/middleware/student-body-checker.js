@@ -5,17 +5,20 @@ const studentBodyChecker = (req, res, next) => {
       success: false,
       message: "Library Id not found",
     });
-  } else if (!student_name) {
+  }
+  if (!student_name) {
     return res.status(400).json({
       success: false,
       message: "Student name not found",
     });
-  } else if (!student_age) {
+  }
+  if (!student_age) {
     return res.status(400).json({
       success: false,
       message: "Student age not found",
     });
-  } else if (!email_id) {
+  }
+  if (!email_id) {
     return res.status(400).json({
       success: false,
       message: "Email id not found",

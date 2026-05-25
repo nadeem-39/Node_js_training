@@ -10,6 +10,8 @@ const {
   editBookForm,
 } = require("../controller/book");
 const bookBodyChecker = require("../middleware/book-body-checker");
+const bookEditChecker = require("../middleware/edit-book-body-checker");
+const fileValidation = require("../middleware/file-validation");
 
 // book list
 router.get("/", bookListPage);
@@ -18,11 +20,14 @@ router.get("/", bookListPage);
 router
   .route("/new-book")
   .get(addBookForm)
-  .post(upload.single("file"), bookBodyChecker, addNewBook);
+  .post(upload.single("file"), bookBodyChecker, fileValidation, addNewBook);
 
 // edit book
 
-router.route("/edit/:id").get(editBookForm).put(editBook);
+router
+  .route("/edit/:id")
+  .get(editBookForm)
+  .put(upload.single("file"), bookEditChecker, fileValidation, editBook);
 
 // delete book
 router.delete("/delete/:id", deleteBook);

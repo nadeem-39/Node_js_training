@@ -1,3 +1,4 @@
+const transporter = require("../config/node-mailer");
 const Books = require("../model/book");
 
 // book list render
@@ -24,9 +25,43 @@ const addBookForm = (req, res, next) => {
 const addNewBook = async (req, res, next) => {
   try {
     let { bookName, authorName, isbn } = req?.body;
-    let file = req.file.filename;
-
+    let file = req?.file?.filename;
     await Books.AddOne(bookName, authorName, isbn, file);
+
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_USER,
+
+      to: "nadeemsiddiqui0390@gmail.com",
+
+      subject: "New Book Added",
+
+      html: `
+                <h2>Book Details</h2>
+
+                <p>
+                    <strong>Book Name:</strong>
+                    ${book_name}
+                </p>
+
+                <p>
+                    <strong>Author Name:</strong>
+                    ${author_name}
+                </p>
+
+                <p>
+                    <strong>ISBN:</strong>
+                    ${isbn}
+                </p>
+            `,
+
+      attachments: [
+        {
+          filename: file,
+
+          path: path.join(__dirname, "../uploads", file),
+        },
+      ],
+    });
 
     res.status(201).json({
       success: true,
@@ -34,7 +69,6 @@ const addNewBook = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-
     res.status(500).json({
       success: false,
       message: "Failed To Add Book",
@@ -57,8 +91,8 @@ const editBook = async (req, res, next) => {
   try {
     let { id } = req?.params;
     let { bookName, authorName, isbn } = req?.body;
-    await Books.findAndUpdateOne(id, bookName, authorName, isbn);
-
+    let file = req?.file?.filename;
+    await Books.findAndUpdateOne(id, bookName, authorName, isbn, file);
     res.status(200).json({
       success: true,
       message: "Book Updated successfully",

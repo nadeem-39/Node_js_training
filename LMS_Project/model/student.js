@@ -1,4 +1,4 @@
-const pool = require("../config/db_config");
+const pool = require("../config/db-config");
 
 class Students {
   static async findAll() {

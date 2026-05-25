@@ -1,4 +1,4 @@
-const pool = require("../config/db_config");
+const pool = require("../config/db-config");
 
 class Books {
   static async findAll() {
@@ -15,23 +15,28 @@ class Books {
     return data;
   }
 
-  static async findAndUpdateOne(id, book_name, author_name, isbn) {
-    let sql = `SELECT * FROM books where id = ${id}`;
+  static async findAndUpdateOne(id, book_name, author_name, isbn, file) {
+    let sql = `SELECT * FROM books where id = ${id} LIMIT 1`;
     const [data] = await pool.execute(sql);
     if (data.length == 0) throw new Error("Can not find book");
-    let updateSql = `
+
+    if (!file) file = data[0].file;
+
+    sql = `
         UPDATE books
         SET
             book_name = ?,
             author_name = ?,
             isbn = ?,
-            modified_at = NOW()
+            modified_at = NOW(),
+            file=?
         WHERE id = ?
     `;
-    const [updatedData] = await pool.execute(updateSql, [
+    const [updatedData] = await pool.execute(sql, [
       book_name,
       author_name,
       isbn,
+      file,
       id,
     ]);
     return updatedData;
