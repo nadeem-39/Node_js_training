@@ -32,7 +32,7 @@ const addNewBook = async (req, res, next) => {
 
     const info = await transporter.sendMail({
       from: process.env.SMTP_USER,
-      to: "nadeemsiddiqui0390@gmail.com",
+      to: req?.user?.email,
       subject: "no-reply \nNew Book Added",
       html: `
                 <h2>Book Details</h2>

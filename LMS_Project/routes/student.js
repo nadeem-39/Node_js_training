@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authentication");
+const isAdmin = require("../middleware/authorization");
 
 const studentBodyChecker = require("../middleware/student-body-checker");
 const {
@@ -9,13 +10,13 @@ const {
   addNewStudent,
 } = require("../controller/student");
 
-// book list
+// student list
 router.get("/", auth, studentListPage);
 
-// add new book
+// add new student
 router
   .route("/new-student")
-  .get(auth, addStudentForm)
-  .post(auth, studentBodyChecker, addNewStudent);
+  .get(auth, isAdmin, addStudentForm)
+  .post(auth, isAdmin, studentBodyChecker, addNewStudent);
 
 module.exports = router;

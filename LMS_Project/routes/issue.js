@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authentication");
+const isAdmin = require("../middleware/authorization");
 const {
   issueListPage,
   issueBookForm,
@@ -14,7 +15,7 @@ router.get("/", auth, issueListPage);
 // add new issue book
 router
   .route("/new-book-issue")
-  .get(auth, issueBookForm)
-  .post(auth, issueBookBodyChecker, addNewIssueBook);
+  .get(auth, isAdmin, issueBookForm)
+  .post(auth, isAdmin, issueBookBodyChecker, addNewIssueBook);
 
 module.exports = router;

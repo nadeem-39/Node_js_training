@@ -75,6 +75,7 @@
                              <thead>
                              <tr>
                                  <th>ID</th>
+                                 <th>Book Name</th>
                                  <th>Student Name</th>
                                  <th>Issue Date</th>
                                  <th>Return Date</th>
@@ -86,6 +87,7 @@
                              <% issue_list.forEach((data, index) => { %>
                                  <tr id="row-<%=data.id%>">
                                         <td><%= data.id %></td>
+                                        <td><%= data.book_name %></td>
 
                                         <td><%= data.student_name %></td>
 
