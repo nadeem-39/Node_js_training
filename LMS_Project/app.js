@@ -48,34 +48,34 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "assets")));
 
 // login routes
-app.use("/login", usersRouter);
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
+app.use("/user", usersRouter);
+// app.get(
+//   "/auth/google",
+//   passport.authenticate("google", { scope: ["profile", "email"] }),
+// );
 
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res, next) => {
-    console.log(req.user);
-    res.redirect("/book");
-  },
-);
+// app.get(
+//   "/auth/google/callback",
+//   passport.authenticate("google", { failureRedirect: "/login" }),
+//   (req, res, next) => {
+//     console.log(req.user);
+//     res.redirect("/book");
+//   },
+// );
 
-app.get("/logout", (req, res, next) => {
-  try {
-    req.logout((err) => {
-      if (err) {
-        return next(err);
-      }
+// app.get("/logout", (req, res, next) => {
+//   try {
+//     req.logout((err) => {
+//       if (err) {
+//         return next(err);
+//       }
 
-      res.redirect("/login");
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+//       res.redirect("/login");
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 // books routes
 app.use("/book", booksRouter);
 

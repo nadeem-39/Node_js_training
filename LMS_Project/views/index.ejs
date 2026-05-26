@@ -185,7 +185,7 @@
           password: password.value,
         };
 
-        let response = await fetch(`/login`, {
+        let response = await fetch(`/user/login`, {
           method: "POST",
 
           headers: {
@@ -195,11 +195,11 @@
           body: JSON.stringify(userInfo),
         });
 
-        response = await response.json();
+        let data = await response.json();
 
-        if (response?.success) {
+        if (response.status == 200) {
           window.location.href = "/book";
-        } else alert(response?.error);
+        } else alert(data?.message);
       }
     </script>
   </body>

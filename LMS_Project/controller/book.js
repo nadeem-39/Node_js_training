@@ -8,6 +8,7 @@ const bookListPage = async (req, res, next) => {
     const data = await Books.findAll();
     res.render("book-list", { books: data });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -17,6 +18,7 @@ const addBookForm = (req, res, next) => {
   try {
     res.render("add-book");
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

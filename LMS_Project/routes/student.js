@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/authentication");
 
 const studentBodyChecker = require("../middleware/student-body-checker");
 const {
@@ -9,12 +10,12 @@ const {
 } = require("../controller/student");
 
 // book list
-router.get("/", studentListPage);
+router.get("/", auth, studentListPage);
 
 // add new book
 router
   .route("/new-student")
-  .get(addStudentForm)
-  .post(studentBodyChecker, addNewStudent);
+  .get(auth, addStudentForm)
+  .post(auth, studentBodyChecker, addNewStudent);
 
 module.exports = router;
