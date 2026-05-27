@@ -8,7 +8,7 @@ const fileValidation = (req, res, next) => {
     });
   }
 
-  if (fileInfo?.size >= 2048000) {
+  if (fileInfo?.size >= 2097152) {
     return res.status(400).json({
       success: false,
       message: "File should be less than 2 MB",

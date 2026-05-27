@@ -12,16 +12,6 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ["image/png", "image/jpeg", "image/png"];
-
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only PDF, PNG and JPG files are allowed"), false);
-  }
-};
-
 const upload = multer({
   storage,
 });

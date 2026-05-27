@@ -1,10 +1,10 @@
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-  host: "localhost", // i will use .env in LMS
-  user: "root",
-  database: "books",
-  password: "Velsof@123",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASS,
 });
 
 module.exports = pool;

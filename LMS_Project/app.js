@@ -9,6 +9,11 @@ const passport = require("passport");
 const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const logger = require("morgan");
+const getRawBody = require("raw-body");
+const contentType = require("content-type");
+const toobusy = require("toobusy-js");
+const bouncer = require("express-bouncer");
+const rateLimit = require("express-rate-limit");
 
 // routes
 const usersRouter = require("./routes/users");
@@ -43,12 +48,33 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 app.use(logger("dev"));
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "assets")));
 
+// Handle DoS and DDoS.
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+
+  max: 5,
+
+  message: "Too many login attempts",
+});
+
+// handle when server is too busy
+
+app.use(function (req, res, next) {
+  if (toobusy()) {
+    // log if you see necessary
+    res.status(503).json({ success: false, message: "Server Too Busy" });
+  } else {
+    next();
+  }
+});
+
 // login routes
-app.use("/user", usersRouter);
+app.use("/user", limiter, usersRouter);
 app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),

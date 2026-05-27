@@ -1,4 +1,4 @@
-const Students = require("../model/Student");
+const Students = require("../model/student");
 
 // Student list render
 

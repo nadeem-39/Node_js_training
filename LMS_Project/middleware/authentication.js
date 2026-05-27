@@ -11,9 +11,9 @@ const auth = async (req, res, next) => {
       return res.status(401).redirect("/user/login");
     }
     let decoded = jwt.verify(token, process.env.JWT_SECRET);
-    let { email, password } = decoded?.data;
+    let { email } = decoded?.data;
     let [userInfo] = await User.findByEmail(email);
-    if (!userInfo || userInfo.password !== password) {
+    if (!userInfo) {
       res.clearCookie(token);
       res.locals.user = null;
       return res.status(401).redirect("/user/login");

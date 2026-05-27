@@ -9,15 +9,14 @@ class Books {
   }
 
   static async findOne(id) {
-    let sql = `SELECT * FROM books where id = ${id}`;
-
-    const [data] = await pool.execute(sql);
+    let sql = `SELECT * FROM books where id = ?`;
+    const [data] = await pool.execute(sql, [id]);
     return data;
   }
 
   static async findAndUpdateOne(id, book_name, author_name, isbn, file) {
-    let sql = `SELECT * FROM books where id = ${id} LIMIT 1`;
-    const [data] = await pool.execute(sql);
+    let sql = `SELECT * FROM books where id = ? LIMIT 1`;
+    const [data] = await pool.execute(sql, [id]);
     if (data.length == 0) throw new Error("Can not find book");
 
     if (!file) file = data[0].file;
@@ -51,11 +50,11 @@ class Books {
     await pool.execute(sql, [book_name, author_name, isbn, file]);
   }
   static async findAndDeleteOne(id) {
-    let sql = `SELECT * FROM books where id = ${id}`;
-    const [data] = await pool.execute(sql);
+    let sql = `SELECT * FROM books where id = ?`;
+    const [data] = await pool.execute(sql, [id]);
     if (data.length == 0) throw new Error("Can not find book");
-    sql = `Delete from books where id = ${id}`;
-    await pool.execute(sql);
+    sql = `Delete from books where id = ?`;
+    await pool.execute(sql, [id]);
   }
 }
 

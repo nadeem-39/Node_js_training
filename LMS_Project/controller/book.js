@@ -75,6 +75,8 @@ const editBookForm = async (req, res, next) => {
   try {
     let { id } = req?.params;
     let [book] = await Books.findOne(id);
+    // console.log(book);
+
     res.render("edit-book", { book });
   } catch (error) {
     console.log(error);
